@@ -3,6 +3,7 @@
 namespace App\Command\Excel;
 
 use App\Command\BaseCommand;
+use App\Excel\Reader;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -19,6 +20,11 @@ class ReadFileCommand extends BaseCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $fileName = $input->getArgument('file-name');
+
+        $reader = new Reader($fileName);
+        $spreadsheet = $reader->getSpreadsheet();
+
         $fileName = $input->getArgument('file-name');
         $output->writeln("<info>file name: $fileName</info>");
     }
