@@ -5,7 +5,7 @@ namespace App\Document;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as Mongo;
 
 /**
- * @Mongo\Document
+ * @Mongo\Document(collection="data")
  */
 class Data
 {
@@ -29,6 +29,11 @@ class Data
      * @Mongo\Field(type="float")
      */
     protected $fee;
+
+    /**
+     * @Mongo\Field(type="string")
+     */
+    protected $fileName;
 
 
     public function getId()
@@ -70,6 +75,16 @@ class Data
         $this->fee = $fee;
 
         return $this;
+    }
+
+    public function getFileName()
+    {
+        return $this->fileName;
+    }
+
+    public function setFileName($fileName)
+    {
+        $this->fileName = $fileName;
     }
 
 
