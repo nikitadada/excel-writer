@@ -12,15 +12,15 @@ final class Reader
 
     private $spreadsheet;
 
-    public function __construct($inputFileName)
+    public function __construct()
     {
         $this->reader = IOFactory::createReader('Xlsx');
         $this->reader->setReadDataOnly(true);
-        $this->spreadsheet = $this->reader->load($inputFileName);
     }
 
-    public function getSpreadsheet()
+    public function getSpreadsheet($inputFileName)
     {
+        $this->spreadsheet = $this->reader->load($inputFileName);
         return $this->spreadsheet;
     }
 
