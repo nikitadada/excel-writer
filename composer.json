@@ -6,6 +6,7 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "alcaeus/mongo-php-adapter": "^1.1",
+        "phpoffice/phpspreadsheet": "^1.5",
         "symfony/console": "4.1.*",
         "symfony/flex": "^1.1",
         "symfony/framework-bundle": "4.1.*",
