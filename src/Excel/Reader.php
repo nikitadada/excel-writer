@@ -2,9 +2,9 @@
 
 namespace App\Excel;
 
-use PhpOffice\PhpSpreadsheet\IOFactory;
-use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
-use PhpOffice\PhpSpreadsheet\Shared\Date;
+use PhpOffice\PhpSpreadsheet\{
+    IOFactory, Reader\Xlsx, Shared\Date, Worksheet\RowCellIterator
+};
 
 final class Reader
 {
@@ -25,7 +25,6 @@ final class Reader
 
         $worksheet = $spreadsheet->getActiveSheet();
 
-        $count = 0;
         foreach ($worksheet->getRowIterator() as $row) {
             $cellIterator = $row->getCellIterator();
             $cellIterator->setIterateOnlyExistingCells(false);
@@ -33,13 +32,12 @@ final class Reader
             if ($row->getRowIndex() === 1) {
                 $this->parseHeader($cellIterator);
             } else {
-                yield $count => $this->parseRow($cellIterator);
-                $count++;
+                yield $this->parseRow($cellIterator);
             }
         }
     }
 
-    private function parseHeader($cellIterator)
+    private function parseHeader(RowCellIterator $cellIterator)
     {
         $meta = [];
 
@@ -50,17 +48,17 @@ final class Reader
         $this->meta = $meta;
     }
 
-    private function normalize($name)
+    private function normalize($name): string
     {
         return str_replace(' ', '', strtolower($name));
     }
 
-    private function parseRow($cellIterator)
+    private function parseRow(RowCellIterator $cellIterator): array
     {
         $result = [];
         foreach ($cellIterator as $cell) {
             $column = $this->getColumnName($cell->getColumn());
-            if($column === 'date') {
+            if ($column === 'date') {
                 $result[$column] = Date::excelToDateTimeObject($cell->getValue());
             } else {
                 $result[$column] = $cell->getValue();
@@ -78,4 +76,6 @@ final class Reader
 
         return $this->meta[$col];
     }
+
+
 }

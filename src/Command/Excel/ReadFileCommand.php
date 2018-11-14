@@ -8,8 +8,9 @@ use App\Excel\Reader;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use MongoDate;
 use MongoUpdateBatch;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\{
+    InputArgument, InputInterface
+};
 use Symfony\Component\Console\Output\OutputInterface;
 
 
@@ -78,7 +79,7 @@ class ReadFileCommand extends BaseCommand
 
     }
 
-    private function aggregateData($fileName)
+    private function aggregateData($fileName): array
     {
         $qb = $this->dm->createQueryBuilder(Data::class);
 
@@ -88,18 +89,17 @@ class ReadFileCommand extends BaseCommand
 
         $data =
             $this->dm->getDocumentCollection(Data::class)
-            ->aggregate([
-                ['$match' => $match],
-                ['$group' => [
-                    '_id' => [
-                        'date' => ['$dateToString' => ['format' => '%Y/%m/%d', 'date' => '$date']],
-                    ],
-                    'value' => ['$sum' => '$value'],
-                    'fee' => ['$sum' => '$fee']
-                ]]
-            ])
-            ->toArray()
-        ;
+                ->aggregate([
+                    ['$match' => $match],
+                    ['$group' => [
+                        '_id' => [
+                            'date' => ['$dateToString' => ['format' => '%Y/%m/%d', 'date' => '$date']],
+                        ],
+                        'value' => ['$sum' => '$value'],
+                        'fee' => ['$sum' => '$fee']
+                    ]]
+                ])
+                ->toArray();
 
         return $data;
 
